@@ -15,27 +15,26 @@ import GUI from "lil-gui";
 
 const gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
 
-let camera: PerspectiveCamera;
-let controls: OrbitControls;
-let renderer: WebGLRenderer;
-let scene: Scene;
-let loop: Loop;
-
 class World {
+  #camera: PerspectiveCamera;
+  #controls: OrbitControls;
+  #renderer: WebGLRenderer;
+  #scene: Scene;
+  #loop: Loop;
   constructor(container: Element) {
-    camera = createCamera();
-    renderer = createRenderer();
-    scene = createScene();
-    loop = new Loop(camera, scene, renderer);
-    container.append(renderer.domElement);
-    controls = createControls(camera, renderer.domElement);
+    this.#camera = createCamera();
+    this.#renderer = createRenderer();
+    this.#scene = createScene();
+    this.#loop = new Loop(this.#camera, this.#scene, this.#renderer);
+    container.append(this.#renderer.domElement);
+    this.#controls = createControls(this.#camera, this.#renderer.domElement);
 
     const { ambientLight, mainLight } = createLights();
 
-    loop.updatables.push(controls);
-    scene.add(ambientLight, mainLight);
+    this.#loop.updatables.push(this.#controls);
+    this.#scene.add(ambientLight, mainLight);
 
-    const resizer = new Resizer(container, camera, renderer);
+    const resizer = new Resizer(container, this.#camera, this.#renderer);
 
     // add the helpers to the scene
     // scene.add(createAxesHelper(), createGridHelper());
@@ -47,10 +46,10 @@ class World {
     );
 
     // move the target to the center of the front bird
-    controls.target.copy(parrot.position);
-    loop.updatables.push(parrot, flamingo, stork);
+    this.#controls.target.copy(parrot.position);
+    this.#loop.updatables.push(parrot, flamingo, stork);
 
-    scene.add(parrot, flamingo, stork);
+    this.#scene.add(parrot, flamingo, stork);
 
     // persist GUI state in local storage on changes
     gui.onFinishChange(() => {
@@ -71,15 +70,15 @@ class World {
   }
 
   render() {
-    renderer.render(scene, camera);
+    this.#renderer.render(this.#scene, this.#camera);
   }
 
   start() {
-    loop.start();
+    this.#loop.start();
   }
 
   stop() {
-    loop.stop();
+    this.#loop.stop();
   }
 }
 
