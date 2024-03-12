@@ -1,4 +1,3 @@
-// import { loadBirds } from "./components/birds/birds.ts";
 import { createCamera } from "./components/camera.ts";
 import { createLights } from "./components/lights.ts";
 import { createScene } from "./components/scene.ts";
@@ -9,7 +8,6 @@ import { Resizer } from "./systems/Resizer.ts";
 import { Loop } from "./systems/Loop.ts";
 import type { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
-// import { createAxesHelper, createGridHelper } from "./components/helpers.ts";
 
 import GUI from "lil-gui";
 import { House } from "./components/House/house.ts";
@@ -44,22 +42,9 @@ class World {
     this.#scene.fog = createFog();
 
     const resizer = new Resizer(container, this.#camera, this.#renderer);
-
-    // add the helpers to the scene
-    // scene.add(createAxesHelper(), createGridHelper());
   }
 
   async init() {
-    // const { parrot, flamingo, stork } = await loadBirds(
-    //   gui.addFolder("Objects")
-    // );
-
-    // move the target to the center of the front bird
-    // this.#controls.target.copy(parrot.position);
-    // this.#loop.updatables.push(parrot, flamingo, stork);
-
-    // this.#scene.add(parrot, flamingo, stork);
-
     // persist GUI state in local storage on changes
     gui.onFinishChange(() => {
       const guiState = gui.save();
