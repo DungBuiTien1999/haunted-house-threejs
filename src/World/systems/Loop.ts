@@ -1,4 +1,4 @@
-import { Clock } from 'three';
+import { Clock } from "three";
 import type { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 
 const clock = new Clock();
@@ -9,7 +9,11 @@ class Loop {
   renderer: WebGLRenderer;
   updatables: any[];
 
-  constructor(camera: PerspectiveCamera, scene: Scene, renderer: WebGLRenderer) {
+  constructor(
+    camera: PerspectiveCamera,
+    scene: Scene,
+    renderer: WebGLRenderer
+  ) {
     this.camera = camera;
     this.scene = scene;
     this.renderer = renderer;
@@ -33,13 +37,14 @@ class Loop {
   tick() {
     // only call the getDelta function once per frame!
     const delta = clock.getDelta();
+    const elapsedTime = clock.getElapsedTime();
 
     // console.log(
     //   `The last frame rendered in ${delta * 1000} milliseconds`,
     // );
 
     for (const object of this.updatables) {
-      object.tick(delta);
+      object.tick(delta, elapsedTime);
     }
   }
 }

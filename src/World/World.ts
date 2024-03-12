@@ -1,4 +1,4 @@
-import { loadBirds } from "./components/birds/birds.ts";
+// import { loadBirds } from "./components/birds/birds.ts";
 import { createCamera } from "./components/camera.ts";
 import { createLights } from "./components/lights.ts";
 import { createScene } from "./components/scene.ts";
@@ -12,6 +12,8 @@ import { OrbitControls } from "three/examples/jsm/Addons.js";
 // import { createAxesHelper, createGridHelper } from "./components/helpers.ts";
 
 import GUI from "lil-gui";
+import { House } from "./components/House/house.ts";
+import { createFog } from "./components/fog.ts";
 
 const gui = new GUI({ title: "🐞 Debug GUI", width: 300 });
 
@@ -29,10 +31,17 @@ class World {
     container.append(this.#renderer.domElement);
     this.#controls = createControls(this.#camera, this.#renderer.domElement);
 
-    const { ambientLight, mainLight } = createLights();
+    const { ambientLight, moonLight, doorLight, ghost1, ghost2, ghost3 } =
+      createLights(gui);
 
-    this.#loop.updatables.push(this.#controls);
-    this.#scene.add(ambientLight, mainLight);
+    const house = new House(gui, this.#loop.updatables);
+    house.add(doorLight);
+    this.#scene.add(house);
+
+    this.#loop.updatables.push(this.#controls, ghost1, ghost2, ghost3);
+    this.#scene.add(ambientLight, moonLight, ghost1, ghost2, ghost3);
+
+    this.#scene.fog = createFog();
 
     const resizer = new Resizer(container, this.#camera, this.#renderer);
 
@@ -41,15 +50,15 @@ class World {
   }
 
   async init() {
-    const { parrot, flamingo, stork } = await loadBirds(
-      gui.addFolder("Objects")
-    );
+    // const { parrot, flamingo, stork } = await loadBirds(
+    //   gui.addFolder("Objects")
+    // );
 
     // move the target to the center of the front bird
-    this.#controls.target.copy(parrot.position);
-    this.#loop.updatables.push(parrot, flamingo, stork);
+    // this.#controls.target.copy(parrot.position);
+    // this.#loop.updatables.push(parrot, flamingo, stork);
 
-    this.#scene.add(parrot, flamingo, stork);
+    // this.#scene.add(parrot, flamingo, stork);
 
     // persist GUI state in local storage on changes
     gui.onFinishChange(() => {
